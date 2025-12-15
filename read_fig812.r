@@ -9,6 +9,73 @@ fig812 <- read_delim(
   trim_ws = TRUE
 )
 
+# 2021 data 
+
+ipsos_2021 <- tibble(
+  cntry = c(
+    "China",
+    "Saudi Arabia",
+    "India",
+    "Peru",
+    "Mexico",
+    "Malaysia",
+    "Colombia",
+    "Chile",
+    "South Korea",
+    "Turkey",
+    "Brazil",
+    "South Africa",
+    "Argentina",
+    "Spain",
+    "Russia",
+    "Italy",
+    "Hungary",
+    "Poland",
+    "Japan",
+    "Sweden",
+    "Belgium",
+    "Great Britain",
+    "Australia",
+    "Germany",
+    "United States",
+    "Netherlands",
+    "Canada",
+    "France"
+  ),
+  year = 2021,
+  pct = c(
+    78,
+    76,
+    71,
+    70,
+    65,
+    65,
+    64,
+    63,
+    62,
+    60,
+    57,
+    57,
+    55,
+    53,
+    53,
+    50,
+    49,
+    48,
+    42,
+    40,
+    38,
+    38,
+    37,
+    37,
+    35,
+    33,
+    32,
+    31
+  )
+)
+
+
 # new IPSOS report has data from 2025 
 # https://www.ipsos.com/sites/default/files/ct/publication/documents/2025-06/Ipsos-AI-Monitor-2025.pdf 
 
@@ -27,7 +94,7 @@ ipsos_2025 <- tibble(cntry = cntry_2025,
                 year = 2025, 
                 pct = vals_2025)
 
-ipsos <- bind_rows(ipsos_2025, fig812)
+ipsos <- bind_rows(ipsos_2025, fig812, ipsos_2021)
 
 ggplot(fig812, aes(cntry, pct, fill = factor(year))) + geom_col(position = "dodge") + coord_flip()
 ggplot(ipsos, aes(cntry, pct, fill = factor(year))) + geom_col(position = "dodge") + coord_flip()
@@ -46,12 +113,14 @@ ggplot(fig812, aes(x = year, y = pct)) +
   scale_x_continuous(breaks = 2022:2024) + 
   labs(title = "Products and services using AI have more benefits\nthan drawbacks [% 'Agree'], Ipsos")
 
-# 22-25
+# 21-25
 ggplot(ipsos, aes(x = year, y = pct)) + 
   geom_point() +
   geom_line() + 
+  geom_hline(yintercept = 50, linetype = "dashed", colour = "gray50") +
   facet_wrap(~cntry) + 
-  scale_x_continuous(breaks = 2022:2025) + 
+  scale_x_continuous(breaks = 2021:2025) + 
+  theme_classic() +
   labs(title = "Products and services using AI have more benefits\nthan drawbacks [% 'Agree'], Ipsos")
 
 ggplot(fig812, aes(x = year, y = pct, colour = cntry)) + 
@@ -59,7 +128,7 @@ ggplot(fig812, aes(x = year, y = pct, colour = cntry)) +
   geom_line() + 
   scale_x_continuous(breaks = 2022:2024)
 
-# better 22-25?
+# better 21-25?
 ggplot(ipsos, mapping = aes(x = reorder(cntry, pct, FUN = median, na.rm = T),
                             y = pct, 
                             colour = factor(year), 
@@ -69,6 +138,12 @@ ggplot(ipsos, mapping = aes(x = reorder(cntry, pct, FUN = median, na.rm = T),
   coord_flip() +
   labs(title = "Products and services using AI have more benefits\nthan drawbacks [% 'Agree'], Ipsos")
 
+# another 21-25?
+ggplot(ipsos, mapping = aes(x = year, y = pct, colour = cntry)) +
+  geom_point() + 
+  geom_line() + 
+  scale_x_continuous(breaks = 2021:2025)
+  labs(title = "Products and services using AI have more benefits\nthan drawbacks [% 'Agree'], Ipsos")
 
 
 
