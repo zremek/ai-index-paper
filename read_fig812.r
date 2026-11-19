@@ -146,4 +146,4 @@ ggplot(ipsos, mapping = aes(x = year, y = pct, colour = cntry)) +
   labs(title = "Products and services using AI have more benefits\nthan drawbacks [% 'Agree'], Ipsos")
 
 
-
+# TODO - add 2026 - /Users/remek/Code/ai-index-paper/Ipsos-AI-Monitor-2026.pdf 
