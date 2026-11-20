@@ -146,4 +146,119 @@ ggplot(ipsos, mapping = aes(x = year, y = pct, colour = cntry)) +
   labs(title = "Products and services using AI have more benefits\nthan drawbacks [% 'Agree'], Ipsos")
 
 
-# TODO - add 2026 - /Users/remek/Code/ai-index-paper/Ipsos-AI-Monitor-2026.pdf 
+# add 2026 - /Users/remek/Code/ai-index-paper/Ipsos-AI-Monitor-2026.pdf 
+
+  cntry_2026 <- c("China",
+                  "India",
+                  "Indonesia",
+                  "Thailand",
+                  "Peru",
+                  "Malaysia",
+                  "Singapore",
+                  "South Korea",
+                  "Mexico",
+                  "South Africa",
+                  "Turkey",
+                  "Colombia",
+                  "Chile",
+                  "Argentina",
+                  "Brazil",
+                  "Spain",
+                  "Italy",
+                  "Israel",
+                  "Japan",
+                  "Hungary",
+                  "Ireland",
+                  "Poland",
+                  "Sweden",
+                  "New Zealand",
+                  "Australia",
+                  "Belgium",
+                  "Great Britain",
+                  "France",
+                  "United States",
+                  "Netherlands",
+                  "Germany",
+                  "Canada")
+  
+  
+  
+  vals_2026 <- c(85, 
+                 80,
+                 77,
+                 74,
+                 71,
+                 70,
+                 68,
+                 67,
+                 66,
+                 66,
+                 65,
+                 63,
+                 60,
+                 56,
+                 56,
+                 54,
+                 53,
+                 51,
+                 50,
+                 50,
+                 47,
+                 47,
+                 47,
+                 46,
+                 43,
+                 41,
+                 38,
+                 38,
+                 38,
+                 38,
+                 37,
+                 34)
+  
+  ipsos_2026 <- tibble(cntry = cntry_2026, 
+                       year = 2026, 
+                       pct = vals_2026)
+  
+
+  ipsos21_26 <- bind_rows(ipsos_2026, ipsos_2025, fig812, ipsos_2021)
+
+  ipsos21_26 |> count(cntry) |> print(n = Inf) 
+  
+  
+  
+  # 21-26 #### 
+  ggplot(ipsos21_26, aes(x = year, y = pct)) + 
+    geom_point() +
+    geom_line() + 
+    geom_hline(yintercept = 50, linetype = "dashed", colour = "gray50") +
+    facet_wrap(~cntry) + 
+    theme_classic() +
+    labs(title = "Products and services using AI have more benefits\nthan drawbacks [% 'Agree'], Ipsos")
+  
+  
+  ipsos21_26 |> na.omit() |> count(cntry) |> print(n = Inf)
+  
+  
+  ipsos21_26 |> na.omit() |> count(cntry) |> filter(n == 6)|> print(n = Inf)
+  
+  wider21_26 <- ipsos21_26 |> na.omit() |> pivot_wider(names_from = year, values_from = pct)
+  wider21_26 <- wider21_26 |> 
+    mutate(
+      complete_cntry = complete.cases(pick(everything()))
+      )
+
+ipsos_complete <- left_join(ipsos21_26, 
+                            wider21_26 |> select(cntry, complete_cntry))
+  
+  # 21-26 + complete_cntry #### 
+  ggplot(ipsos_complete, aes(x = year, y = pct, colour = complete_cntry)) + 
+    geom_point() +
+    geom_line() + 
+    geom_hline(yintercept = 50, linetype = "dashed", colour = "gray50") +
+    facet_wrap(~cntry) + 
+    theme_classic() +
+    labs(title = "Products and services using AI have more benefits\nthan drawbacks [% 'Agree'], Ipsos")
+  
+save(ipsos_complete, file = "ipsos_complete.RData")
+
